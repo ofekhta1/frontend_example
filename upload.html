@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag & Drop or Browse: File Upload</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body>
+  <div class="drag-area">
+    <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+    <header>Drag & Drop to Upload File</header>
+    <span>OR</span>
+    <button>Browse File</button>
+    <input type="file" hidden>
+  </div>
+  <div class="drag-area2">
+    <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+    <header>Drag & Drop to Upload File</header>
+    <span>OR</span>
+    <button>Browse File2</button>
+    <input type="file" hidden>
+  </div>
+
+  
+   
+
+
+  <script>
+    // your JavaScript code here
+    const dropArea = document.querySelector(".drag-area"),
+    dragText = dropArea.querySelector("header"),
+    button = dropArea.querySelector("button"),
+    input = dropArea.querySelector("input");
+    const dropArea2 = document.querySelector(".drag-area2"),
+    dragText2 = dropArea2.querySelector("header"),
+    button2 = dropArea2.querySelector("button"),
+    input2 = dropArea2.querySelector("input");
+    let file; 
+    button.onclick = ()=>{
+      input.click(); 
+    }
+    button2.onclick = () => {
+  input2.click();
+    }
+
+    input.addEventListener("change", function(){
+    const file = this.files[0];
+    dropArea.classList.add("active");
+    showFile(dropArea, file);
+});
+input2.addEventListener("change", function(){
+    const file = this.files[0];
+    dropArea2.classList.add("active");
+    showFile(dropArea2, file);
+});
+
+    dropArea.addEventListener("dragover", (event)=>{
+      event.preventDefault(); 
+      dropArea.classList.add("active");
+      dragText.textContent = "Release to Upload File";
+    });
+    dropArea2.addEventListener("dragover", (event) => {
+  event.preventDefault();
+  dropArea2.classList.add("active");
+  dragText2.textContent = "Release to Upload File";
+});
+
+
+    dropArea.addEventListener("dragleave", ()=>{
+      dropArea.classList.remove("active");
+      dragText.textContent = "Drag & Drop to Upload File";
+    });
+
+    dropArea2.addEventListener("dragleave", () => {
+  dropArea2.classList.remove("active");
+  dragText2.textContent = "Drag & Drop to Upload File";
+});
+
+dropArea.addEventListener("drop", (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    showFile(dropArea, file);
+});
+
+dropArea2.addEventListener("drop", (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    showFile(dropArea2, file);
+});
+
+    function showFile(dragArea,file){
+      let fileType = file.type; 
+      let validExtensions = ["image/jpeg", "image/jpg", "image/png"]; 
+      if(validExtensions.includes(fileType)){ 
+        let fileReader = new FileReader(); 
+        fileReader.onload = ()=>{
+          let fileURL = fileReader.result; 
+          let imgTag = `<img src="${fileURL}" alt="image">`; 
+          dragArea.innerHTML = imgTag; 
+        }
+        fileReader.readAsDataURL(file);
+      }else{
+        alert("This is not an Image File!");
+        dragArea.classList.remove("active");
+        dragArea.querySelector("header").textContent = "Drag & Drop to Upload File";
+      }
+    }
+  </script>
+</body>
+</html>
